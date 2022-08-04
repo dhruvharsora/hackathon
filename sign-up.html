@@ -1,0 +1,71 @@
+<?php
+
+include "dbcon.php";
+
+error_reporting(0);
+
+if ($post['submit']){
+    $user_id = $post['user_id'];
+    $email = $post['email'];
+    $password = md5($_POST['password']);
+    $cpassword = md5`($_POST['cpassword']);
+
+    if($password == $cpassword){
+      $sql = "SELECT * FROM signup WHERE email = '$email' AND password = '$password'";
+      $result = mysql_query($conn, $sql);
+      if(mysql_num_rows($result > 0)) {
+        echo "<script>alert('Email Already Exists')</script>";
+      } else {
+        $sql = "INSERT INTO signup (user_id, email, password, cpassword) 
+              VALUES ('$user_id', '$email', '$password', '$cpassword')";
+      $result = mysqli_query($conn, $sql);
+
+      if($result){
+        echo "<script>alert('Registration Successful')</script>"; 
+        $user_id = "";
+        $email = "";
+        $_POST['password'] = "";
+        $_POST['cpassword'] = "";
+      
+      }else{
+        echo "<script>alert('Something went wrong')</script>";
+      }
+    }
+    }else{
+      echo "<script>alert('Password not matched')</script>";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Sign Up | By Code Info</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet"/>
+  </head>
+  <body>
+    <div class="signup-box">
+      <h1>Sign Up</h1>
+      <h4>It's free and only takes a minute</h4>
+      <form action="" method="post">
+        <label>User ID</label>
+        <input type="text" name="user_id" placeholder="" value="<?php echo $user_id; ?>"/>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="" value="<?php echo $email; ?>"/>
+        <label>Password</label>
+        <input type="password" name="password" placeholder="" value="<?php echo $_POST['password']; ?>"/>
+        <label>Confirm Password</label>
+        <input type="cpassword" name="cpassword" placeholder="" value="<?php echo $_POST['cpassword']; ?>"/>
+        <input type="button" name="submit" value="Submit" />
+      </form>
+      <p>
+        By clicking the Sign Up button,you agree to our <br />
+        <a href="#">Terms and Condition</a> and <a href="#">Policy Privacy</a>
+      </p>
+    </div>
+    <p class="para-2">
+      Already have an account? <a href="login.html">Login here</a>
+    </p>
+  </body>
+</html>
